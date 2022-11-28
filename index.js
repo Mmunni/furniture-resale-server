@@ -16,26 +16,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
   try {
-      const livingRoomCollection = client.db('resaleFurniture').collection('livingroom');
-      const bedRoomCollection = client.db('resaleFurniture').collection('bedroom');
-      const dinningRoomCollection = client.db('resaleFurniture').collection('dinnning');
+      const categoriesCollection = client.db('resaleFurniture').collection('categories');
+      const productsCollection = client.db('resaleFurniture').collection('products');
 
-     
-
-     
-      
-      
-
-    /***
-     * API Naming Convention 
-     * app.get('/bookings')
-     * app.get('/bookings/:id')
-     * app.post('/bookings')
-     * app.patch('/bookings/:id')
-     * app.delete('/bookings/:id')
-    */
-
-   
+     app.get('/categories', async(req, res) => {
+      const query = {};
+      const category = await categoriesCollection.find(query).toArray();
+      res.send(category);
+     })
 
    
 
