@@ -40,6 +40,10 @@ async function run() {
   try {
       const categoriesCollection = client.db('resaleFurniture').collection('categories');
       const productsCollection = client.db('resaleFurniture').collection('products');
+      const bookingsCollection = client.db('resaleFurniture').collection('bookings');
+      const usersCollection = client.db('resaleFurniture').collection('users');
+      const doctorsCollection = client.db('resaleFurniture').collection('doctors');
+      const paymentsCollection = client.db('resaleFurniture').collection('payments');
 
        // NOTE: make sure you use verifyAdmin after verifyJWT
        const verifyAdmin = async (req, res, next) => {
@@ -52,6 +56,26 @@ async function run() {
         }
         next();
     }
+
+     // Use Aggregate to query multiple collection and then merge data
+     app.get('/products', async (req, res) => {
+      const date = req.query.date;
+      const query = {};
+      const options = await productsCollection.find(query).toArray();
+
+      // get the bookings of the provided date
+      const bookingQuery = { appointmentDate: date }
+      const alreadyBooked = await bookingsCollection.find(bookingQuery).toArray();
+
+      // code carefully :D
+      options.forEach(option => {
+          const optionBooked = alreadyBooked.filter(book => book.treatment === option.name);
+          const bookedSlots = optionBooked.map(book => book.slot);
+          const remainingSlots = option.slots.filter(slot => !bookedSlots.includes(slot))
+          option.slots = remainingSlots;
+      })
+      res.send(options);
+  });
 
      app.get('/categories', async(req, res) => {
       const query = {};
