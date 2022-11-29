@@ -42,7 +42,7 @@ async function run() {
       const productsCollection = client.db('resaleFurniture').collection('products');
       const bookingsCollection = client.db('resaleFurniture').collection('bookings');
       const usersCollection = client.db('resaleFurniture').collection('users');
-      const doctorsCollection = client.db('resaleFurniture').collection('doctors');
+    //   const doctorsCollection = client.db('resaleFurniture').collection('doctors');
       const paymentsCollection = client.db('resaleFurniture').collection('payments');
 
       // NOTE: make sure you use verifyAdmin after verifyJWT
@@ -97,22 +97,13 @@ async function run() {
         res.send(result);
     })
 
-    /***
-     * API Naming Convention 
-     * app.get('/bookings')
-     * app.get('/bookings/:id')
-     * app.post('/bookings')
-     * app.patch('/bookings/:id')
-     * app.delete('/bookings/:id')
-    */
-
-    app.get('/bookings', verifyJWT, async (req, res) => {
+    app.get('/bookings', async (req, res) => {
         const email = req.query.email;
-        const decodedEmail = req.decoded.email;
+        // const decodedEmail = req.decoded.email;
 
-        if (email !== decodedEmail) {
-            return res.status(403).send({ message: 'forbidden access' });
-        }
+        // if (email !== decodedEmail) {
+        //     return res.status(403).send({ message: 'forbidden access' });
+        // }
 
         const query = { email: email };
         const bookings = await bookingsCollection.find(query).toArray();
@@ -137,10 +128,10 @@ async function run() {
 
         const alreadyBooked = await bookingsCollection.find(query).toArray();
 
-        if (alreadyBooked.length) {
-            const message = `You already have a booking on ${booking.appointmentDate}`
-            return res.send({ acknowledged: false, message })
-        }
+        // if (alreadyBooked.length) {
+        //     const message = `You already have a booking on ${booking.appointmentDate}`
+        //     return res.send({ acknowledged: false, message })
+        // }
 
         const result = await bookingsCollection.insertOne(booking);
         res.send(result);
@@ -209,7 +200,7 @@ async function run() {
         res.send(result);
     });
 
-    app.put('/users/admin/:id', verifyJWT, verifyAdmin, async (req, res) => {
+    app.put('/users/admin/:id',  async (req, res) => {
         const id = req.params.id;
         const filter = { _id: ObjectId(id) }
         const options = { upsert: true };
@@ -223,24 +214,24 @@ async function run() {
     });
 
 
-    app.get('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
-        const query = {};
-        const doctors = await doctorsCollection.find(query).toArray();
-        res.send(doctors);
-    })
+    // app.get('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
+    //     const query = {};
+    //     const doctors = await doctorsCollection.find(query).toArray();
+    //     res.send(doctors);
+    // })
 
-    app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
-        const doctor = req.body;
-        const result = await doctorsCollection.insertOne(doctor);
-        res.send(result);
-    });
+    // app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
+    //     const doctor = req.body;
+    //     const result = await doctorsCollection.insertOne(doctor);
+    //     res.send(result);
+    // });
 
-    app.delete('/doctors/:id', verifyJWT, verifyAdmin, async (req, res) => {
-        const id = req.params.id;
-        const filter = { _id: ObjectId(id) };
-        const result = await doctorsCollection.deleteOne(filter);
-        res.send(result);
-    })
+    // app.delete('/doctors/:id', verifyJWT, verifyAdmin, async (req, res) => {
+    //     const id = req.params.id;
+    //     const filter = { _id: ObjectId(id) };
+    //     const result = await doctorsCollection.deleteOne(filter);
+    //     res.send(result);
+    // })
    
 
 }
