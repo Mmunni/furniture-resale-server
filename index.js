@@ -42,7 +42,7 @@ async function run() {
       const productsCollection = client.db('resaleFurniture').collection('products');
       const bookingsCollection = client.db('resaleFurniture').collection('bookings');
       const usersCollection = client.db('resaleFurniture').collection('users');
-      const addCollection = client.db('resaleFurniture').collection('furniture');
+      const addCollection = client.db('resaleFurniture').collection('doctor');
       const paymentsCollection = client.db('resaleFurniture').collection('payments');
 
       // NOTE: make sure you use verifyAdmin after verifyJWT
@@ -93,7 +93,7 @@ async function run() {
    
     app.get('/appointmentSpecialty', async (req, res) => {
         const query = {}
-        const result = await appointmentOptionCollection.find(query).project({ name: 1 }).toArray();
+        const result = await categoriesCollection.find(query).project({ name: 1 }).toArray();
         res.send(result);
     })
 
@@ -214,19 +214,19 @@ async function run() {
     });
 
 
-    app.get('/furniture', verifyJWT, verifyAdmin, async (req, res) => {
+    app.get('/doctors',  async (req, res) => {
         const query = {};
         const doctors = await addCollection.find(query).toArray();
         res.send(doctors);
     })
 
-    app.post('/furniture', verifyJWT, verifyAdmin, async (req, res) => {
+    app.post('/doctors', async (req, res) => {
         const doctor = req.body;
         const result = await addCollection.insertOne(doctor);
         res.send(result);
     });
 
-    app.delete('/furniture/:id', verifyJWT, verifyAdmin, async (req, res) => {
+    app.delete('/doctors/:id', async (req, res) => {
         const id = req.params.id;
         const filter = { _id: ObjectId(id) };
         const result = await addCollection.deleteOne(filter);
