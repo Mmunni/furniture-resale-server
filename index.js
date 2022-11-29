@@ -214,11 +214,11 @@ async function run() {
     });
 
 
-    // app.get('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
-    //     const query = {};
-    //     const doctors = await doctorsCollection.find(query).toArray();
-    //     res.send(doctors);
-    // })
+    app.get('/buyers', verifyJWT, verifyAdmin, async (req, res) => {
+        const query = {};
+        const doctors = await doctorsCollection.find(query).toArray();
+        res.send(doctors);
+    })
 
     // app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
     //     const doctor = req.body;
