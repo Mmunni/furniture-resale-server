@@ -42,7 +42,7 @@ async function run() {
       const productsCollection = client.db('resaleFurniture').collection('products');
       const bookingsCollection = client.db('resaleFurniture').collection('bookings');
       const usersCollection = client.db('resaleFurniture').collection('users');
-    //   const doctorsCollection = client.db('resaleFurniture').collection('doctors');
+      const addCollection = client.db('resaleFurniture').collection('furniture');
       const paymentsCollection = client.db('resaleFurniture').collection('payments');
 
       // NOTE: make sure you use verifyAdmin after verifyJWT
@@ -214,24 +214,24 @@ async function run() {
     });
 
 
-    app.get('/buyers', verifyJWT, verifyAdmin, async (req, res) => {
+    app.get('/furniture', verifyJWT, verifyAdmin, async (req, res) => {
         const query = {};
-        const doctors = await doctorsCollection.find(query).toArray();
+        const doctors = await addCollection.find(query).toArray();
         res.send(doctors);
     })
 
-    // app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
-    //     const doctor = req.body;
-    //     const result = await doctorsCollection.insertOne(doctor);
-    //     res.send(result);
-    // });
+    app.post('/furniture', verifyJWT, verifyAdmin, async (req, res) => {
+        const doctor = req.body;
+        const result = await addCollection.insertOne(doctor);
+        res.send(result);
+    });
 
-    // app.delete('/doctors/:id', verifyJWT, verifyAdmin, async (req, res) => {
-    //     const id = req.params.id;
-    //     const filter = { _id: ObjectId(id) };
-    //     const result = await doctorsCollection.deleteOne(filter);
-    //     res.send(result);
-    // })
+    app.delete('/furniture/:id', verifyJWT, verifyAdmin, async (req, res) => {
+        const id = req.params.id;
+        const filter = { _id: ObjectId(id) };
+        const result = await addCollection.deleteOne(filter);
+        res.send(result);
+    })
    
 
 }
